@@ -84,7 +84,7 @@ const payload = {
   username: user.username
 }
 const options = {
-  expiresIn: "60"
+  expiresIn: 60
 }
 return jwt.sign(payload, SECRET, options)
 }

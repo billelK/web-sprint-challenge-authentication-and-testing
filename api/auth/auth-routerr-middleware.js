@@ -24,9 +24,8 @@ async function usernameTaken(req,res,next) {
 async function usernameExists(req,res,next) {
     const {username} = req.body
     const user = await model.getBy({username})
-    console.log(user);
     
-   
+
     if (user) {
         req.user = user
         next()
