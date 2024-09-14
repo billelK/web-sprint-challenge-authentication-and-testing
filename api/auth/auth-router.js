@@ -1,11 +1,11 @@
 const router = require('express').Router();
 const model = require("./auth-router-model")
-const {usernameExists,payloadValid} = require("./auth-routerr-middleware")
+const {usernameTaken,payloadValid,usernameExists} = require("./auth-routerr-middleware")
 const bcrypt = require("bcryptjs")
 const {SECRET} = require("../secrets")
 const jwt = require("jsonwebtoken")
 
-router.post('/register',payloadValid, usernameExists, (req, res) => {
+router.post('/register',payloadValid, usernameTaken, (req, res) => {
   
   let {username,password} = req.body
   password = bcrypt.hashSync(password,8)
@@ -41,8 +41,18 @@ router.post('/register',payloadValid, usernameExists, (req, res) => {
   */
 });
 
-router.post('/login', (req, res,next) => {
-  res.end('implement login, please!');
+router.post('/login',payloadValid,usernameExists, async (req, res, next) => {
+  const {username, password} = req.body
+  const isCorrectPass = bcrypt.compareSync(password, req.user.password)
+  if (isCorrectPass) {
+    const token = tokenMaker(req.user)
+    res.json({
+      message: `welcome, ${username}`,
+      token: token
+    })
+  } else {
+    res.json("invalid credentials")
+  }
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -76,7 +86,7 @@ const payload = {
 const options = {
   expiresIn: "60"
 }
-return {payload, SECRET, options}
+return jwt.sign(payload, SECRET, options)
 }
 
 module.exports = router;
