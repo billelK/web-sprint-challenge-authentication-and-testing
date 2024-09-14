@@ -7,7 +7,7 @@ module.exports = (req, res, next) => {
   if(token) {
     jwt.verify(token,SECRET, (err, decode) =>{  
       if(err) {
-        res.json("token invalid")
+        res.status(400).json("token invalid")
       } else {
         req.decodedJWT = decode
         next()
