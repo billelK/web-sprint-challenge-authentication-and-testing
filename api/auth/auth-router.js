@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs")
 const {SECRET} = require("../secrets")
 const jwt = require("jsonwebtoken")
 
-router.post('/register',payloadValid, usernameTaken, (req, res) => {
+router.post('/register',payloadValid, usernameTaken, (req, res, next) => {
   
   let {username,password} = req.body
   password = bcrypt.hashSync(password,8)
@@ -14,6 +14,7 @@ router.post('/register',payloadValid, usernameTaken, (req, res) => {
   .then(newUser => {
     res.status(200).json(newUser)
   })
+  .catch(next)
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -51,7 +52,7 @@ router.post('/login',payloadValid,usernameExists, async (req, res, next) => { //
       token: token
     })
   } else {
-    res.json("invalid credentials")
+    res.status(400).json("invalid credentials")
   }
   /*
     IMPLEMENT

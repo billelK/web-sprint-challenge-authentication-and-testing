@@ -6,7 +6,7 @@ async function payloadValid (req,res,next) {
     if (username && password) {
         next()
     } else {
-        res.json("username and password required")
+        res.status(400).json("username and password required")
     }
 }
 
@@ -15,7 +15,7 @@ async function usernameTaken(req,res,next) {
     const user = await model.getBy({username})
    
     if (user) {
-        res.json("username taken")
+        res.status(400).json("username taken")
     } else {
         next()
     }
@@ -30,7 +30,7 @@ async function usernameExists(req,res,next) {
         req.user = user
         next()
     } else {
-        res.json("invalid credentials")
+        res.status(400).json("invalid credentials")
     }
 }
 
