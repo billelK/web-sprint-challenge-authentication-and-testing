@@ -2,6 +2,8 @@ const router = require('express').Router();
 const model = require("./auth-router-model")
 const {usernameExists,payloadValid} = require("./auth-routerr-middleware")
 const bcrypt = require("bcryptjs")
+const {SECRET} = require("../secrets")
+const jwt = require("jsonwebtoken")
 
 router.post('/register',payloadValid, usernameExists, (req, res) => {
   
@@ -65,5 +67,16 @@ router.post('/login', (req, res,next) => {
       the response body should include a string exactly as follows: "invalid credentials".
   */
 });
+
+function tokenMaker(user){
+const payload = {
+  subject: user.id,
+  username: user.username
+}
+const options = {
+  expiresIn: "60"
+}
+return {payload, SECRET, options}
+}
 
 module.exports = router;
