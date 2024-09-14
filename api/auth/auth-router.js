@@ -41,7 +41,7 @@ router.post('/register',payloadValid, usernameTaken, (req, res) => {
   */
 });
 
-router.post('/login',payloadValid,usernameExists, async (req, res, next) => {
+router.post('/login',payloadValid,usernameExists, async (req, res, next) => { // eslint-disable-line
   const {username, password} = req.body
   const isCorrectPass = bcrypt.compareSync(password, req.user.password)
   if (isCorrectPass) {
